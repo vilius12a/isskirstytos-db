@@ -91,6 +91,25 @@ services:
     depends_on:
       - elasticsearch
 
+  ent-search:
+    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.1
+    restart: unless-stopped
+    depends_on:
+      - "elasticsearch"
+    environment:
+      - "JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ENT_SEARCH_DEFAULT_PASSWORD=changeme"
+      - "elasticsearch.username=elastic"
+      - "elasticsearch.password=08*7rF1*c6gfHeR*JkUZ"
+      - "elasticsearch.host=http://elasticsearch:9200"
+      - "allow_es_settings_modification=true"
+      - "secret_management.encryption_keys=[4a2cd3f81d39bf28738c10db0ca782095ffac07279561809eecc722e0c20eb09]"
+      - "elasticsearch.startup_retry.interval=15"
+    ports:
+      - 127.0.0.1:3002:3002
+    networks:
+      - elk
+
   mysql:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password

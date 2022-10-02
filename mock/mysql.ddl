@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS client_personal;
 
 CREATE TABLE client_personal
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name varchar (255),
     surname varchar (255),
     birthdate date,
@@ -25,7 +25,7 @@ CREATE TABLE client_personal
 
 CREATE TABLE client_purchases
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     registration_date date,
     products_per_year int,
     last_purchase_date date,
@@ -35,7 +35,7 @@ CREATE TABLE client_purchases
 
 CREATE TABLE courier
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name varchar (255),
     surname varchar (255),
     rating varchar (255),
@@ -44,7 +44,7 @@ CREATE TABLE courier
 
 CREATE TABLE manufacturer
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     company_name varchar (255),
     address varchar (255),
     country varchar (255),
@@ -53,7 +53,7 @@ CREATE TABLE manufacturer
 
 CREATE TABLE partner
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     company_name varchar (255),
     company_code varchar (255),
     PRIMARY KEY(id)
@@ -61,14 +61,14 @@ CREATE TABLE partner
 
 CREATE TABLE store
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     address varchar (255),
     PRIMARY KEY(id)
 );
 
 CREATE TABLE product
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name varchar (255),
     description TEXT,
     price decimal,
@@ -80,7 +80,7 @@ CREATE TABLE product
 
 CREATE TABLE shipment
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     total_price decimal,
     purchase_date date,
     client_purchase_id integer NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE work
 
 CREATE TABLE shipment_details
 (
-    id integer,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     quantity decimal,
     product_id integer,
     shipment_id integer NOT NULL,
