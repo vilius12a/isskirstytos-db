@@ -65,6 +65,11 @@ services:
     environment:
       LS_JAVA_OPTS: -Xms256m -Xmx256m
       LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+      LOGSTASH_JDBC_DRIVER_JAR_LOCATION: /usr/share/logstash/logstash-core/lib/jars/mysql-connector-java.jar
+      LOGSTASH_JDBC_DRIVER: "com.mysql.jdbc.Driver"
+      LOGSTASH_JDBC_CONNECTION_STRING: "jdbc:mysql://mysql:3306/delivery-is?useSSL=false"
+      LOGSTASH_JDBC_USERNAME: root
+      LOGSTASH_JDBC_PASSWORD: root
     networks:
       - elk
     depends_on:
@@ -85,6 +90,20 @@ services:
       - elk
     depends_on:
       - elasticsearch
+
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - './db-data/mysql:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'delivery-is'
+    ports:
+      - "3306:3306"
+    networks:
+      - elk
 
 networks:
   elk:
