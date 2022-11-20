@@ -10,6 +10,7 @@ services:
   # subsequent runs, the service simply returns immediately, without performing
   # any modification to existing users.
   setup:
+    platform: linux/arm64
     build:
       context: setup/
       args:
@@ -27,6 +28,7 @@ services:
       - elasticsearch
 
   elasticsearch:
+    platform: linux/arm64
     build:
       context: elasticsearch/
       args:
@@ -42,14 +44,22 @@ services:
       # Bootstrap password.
       # Used to initialize the keystore during the initial startup of
       # Elasticsearch. Ignored on subsequent runs.
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      ELASTIC_PASSWORD: ${c:-}
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
+      xpack.security.enabled: 'false'
+      http.port: 9200
+      http.cors.allow-origin: "http://localhost:1358,http://127.0.0.1:1358"
+      http.cors.enabled: 'true'
+      http.cors.allow-headers: "X-Requested-With, X-Auth-Token, Content-Type, Content-Length, Authorization"
+      http.cors.allow-methods: "OPTIONS, HEAD, GET, POST, PUT, DELETE"
+      http.cors.allow-credentials: 'true'
     networks:
       - elk
 
   logstash:
+    platform: linux/arm64
     build:
       context: logstash/
       args:
@@ -76,6 +86,7 @@ services:
       - elasticsearch
 
   kibana:
+    platform: linux/arm64
     build:
       context: kibana/
       args:
@@ -91,26 +102,18 @@ services:
     depends_on:
       - elasticsearch
 
-  ent-search:
-    image: docker.elastic.co/enterprise-search/enterprise-search:8.4.1
-    restart: unless-stopped
+  dejavu-search:
+    platform: linux/arm64
+    image: appbaseio/dejavu
     depends_on:
       - "elasticsearch"
-    environment:
-      - "JAVA_OPTS=-Xms512m -Xmx512m"
-      - "ENT_SEARCH_DEFAULT_PASSWORD=changeme"
-      - "elasticsearch.username=elastic"
-      - "elasticsearch.password=08*7rF1*c6gfHeR*JkUZ"
-      - "elasticsearch.host=http://elasticsearch:9200"
-      - "allow_es_settings_modification=true"
-      - "secret_management.encryption_keys=[4a2cd3f81d39bf28738c10db0ca782095ffac07279561809eecc722e0c20eb09]"
-      - "elasticsearch.startup_retry.interval=15"
     ports:
-      - 127.0.0.1:3002:3002
+      - 1358:1358
     networks:
       - elk
 
   mysql:
+    platform: linux/arm64
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     restart: always
